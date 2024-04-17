@@ -3,7 +3,6 @@
 #include <assert.h>
 
 
- typedef struct unit32_t unit32_t;
 
  void DisplayArray(const uint32_t* array, int size) {
     for (int i = 0; i < size; i++) {
@@ -85,7 +84,7 @@ void TestEncodingDecoding(){
     }
 }
 
-void TestReverseManchester(){
+void TestReverseManchester() {
     // Test cases 1: Checking parameters
     uint32_t output1[1];
     assert(ReverseManchester(NULL, output1, 3, 1) == FALSE);
@@ -119,7 +118,7 @@ void TestReverseManchester(){
     const int pattern6 = 10;
     printf(PATTERN_CHECK(pattern6));
 
-    uint32_t input7[] = {1, 0, 1,0,1,};
+    uint32_t input7[] = {1, 0, 1, 0, 1,};
     uint32_t output7[1]; // Output size is too small to hold the decoded data
     assert(ReverseManchester(input7, output7, 5, 1) == FALSE);
 
@@ -215,6 +214,11 @@ void TestManchesterEncoding(){
     const int pattern13 = 1001100110;
     printf(PATTERN_CHECK(pattern13));
 }
+
+
+
+
+
 int main() {
     TestManchesterEncoding();
     TestReverseManchester();

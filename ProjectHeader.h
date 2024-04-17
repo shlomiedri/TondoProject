@@ -11,21 +11,14 @@
 #define TONDOPROJECT_PROJECTHEADER_H
 #include <stdint.h>
 #include <stddef.h>
+#include "Constants.h"
+#include "nrg_gpio.h"
+#include "nrfx_timer.h"
+#include <Arduino.h>
 
-#define BAUD_RATE 9600
-#define DATA_RATE 4800
-#define WRONG_INPUT_ERROR "The pointer to the input array is NULL.\n"
-#define WRONG_OUTPUT_ERROR "The pointer to the size of the array is NULL.\n"
-#define WRONG_INPUT_SIZE_ERROR "The input array size shouldn't zero.(Should be |SIZE|>0).\n"
-#define WRONG_SIZE_PROPORTION_ENCODE "The input.size and output.size should make |OUTPUT|=2*|INPUT|.\n"
-#define WRONG_BIT_INPUT(i) "Wrong bit input(neither 0,1) at index %d.",i
-#define WRONG_SEQUENCE_INPUT(i) "Incorrect format of bits order in array indexes: (%d,%d).", i, i+1
-#define PATTERN_CHECK(i) "Should be of pattern type: %d.\n\n", i
-#define WRONG_SIZE_PROPORTION_DECODE "The size of the output array doesn't fit the format |OUTPUT|*2<|INPUT|.\n"
+typedef enum{IdleState, DataBits, StopConditions, MaximalBits} States;
 
-typedef enum { FALSE=0, TRUE=1 } Bool; // Define a boolean type
-
-typedef enum {Arduino, NRF52840} BoardType;
+typedef enum {Arduino, NRF52840} Platform;
 
 /***
  * A function which receives an array which contains data bits and outputArray
@@ -52,8 +45,23 @@ int ManchesterEncode (const uint32_t* inputArray, uint32_t* outputArray,const in
  */
 int ReverseManchester(const uint32_t* inputArray,uint32_t* outputArray,const int inputSize,const  int outputSize );
 
+/**
+ * Setup the platform and pin needed to INPUT mode so we would be able to listen.
+ * @param platform - The type of Platform we will work over
+ * @param receivePin - The pin which we would like to connect to.
+ */
+void BootStrap(const Platform platform, const int receivePin);
 
+/***
+ * This function listens to a speicifc GPIO of one of the supported Platform(Must be bootstrap before)
+ * and retruns the decoded ManchesterEncode of that specific pin.
+ * The user must provide outputData of size 5 (which is constant) the function return the last
+ * index of the decoded message.
+ * @param platform - The type of platform our user would use.(Should be
+ * @param receivePin - The pin which we would like to listen to.
+ * @param outputData - An array of uint32_t* of our output data.
+ * @return The effective size of output date which we use.
+ */
 
-
-
+int ManchesterTransmitting(const Platform platform, const int receivePin, uint32_t* outputData);
 #endif //TONDOPROJECT_PROJECTHEADER_H
